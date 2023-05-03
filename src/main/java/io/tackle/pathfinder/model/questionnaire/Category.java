@@ -47,6 +47,9 @@ public class Category extends AbstractEntity {
     @Basic(optional=false)
     public String name;
 
+    @Basic(optional = false)
+    public String slug;
+
     @ManyToOne
     @JoinColumn(name="questionnaire_id", nullable = false)
     public Questionnaire questionnaire;

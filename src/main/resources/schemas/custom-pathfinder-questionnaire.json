@@ -1,0 +1,333 @@
+{
+    "version": "v0.0.2",
+    "pages": [
+      {
+        "title": "Application Details",
+        "slug": "application-details",
+        "questions": [
+          {
+            "name": "DEVOWNER",
+            "title": "Does the application development team understand and actively develop the application?",
+            "tooltip": "How much knowledge does the team have regarding the development or usage of the application",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Little knowledge, no development (example: third-party or commercial off-the-shelf application)",
+              "2-RED|Maintenance mode, no SME knowledge or adequate documentation available",
+              "3-AMBER|Maintenance mode, SME knowledge is available",
+              "4-GREEN|Actively developed, SME knowledge is available",
+              "5-GREEN|Greenfield application"
+            ]
+          },
+          {
+            "name": "OPSOWNER",
+            "title": "How is the application supported in production?",
+            "tooltip": "How much knowledge does the team have to support the application in production",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|External support provider with a ticket-driven escalation process; no inhouse support resources",
+              "2-RED|Internal support team, separate from the development team, with little interaction between the teams",
+              "3-AMBER|Multiple teams provide support using an established escalation model",
+              "4-GREEN|SRE (Site Reliability Engineering) approach with a knowledgeable and experienced operations team",
+              "5-GREEN|DevOps approach with the same team building the application and supporting it in production"
+            ]
+          },
+          {
+            "name": "MTTR",
+            "title": "What is the application's mean time to recover (MTTR) from failure in a production environment?",
+            "tooltip": "Gauge the problem resolution time, MTTR (mean time to recover) is the average time it takes to repair/recover a system",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Not tracked",
+              "2-RED|1 month or more",
+              "3-AMBER|1-7 days",
+              "4-GREEN|1-24 hours",
+              "5-GREEN|Less than 1 hour"
+            ]
+          },
+          {
+            "name": "COMPLIANCE",
+            "title": "Does the application have legal and/or licensing requirements?",
+            "tooltip": "Assess the level of legal and licensing required",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-AMBER|Multiple legal and licensing requirements",
+              "2-AMBER|Licensing requirements (examples: per server, per CPU)",
+              "3-AMBER|Legal requirements (examples: cluster isolation, hardware, PCI or HIPAA compliance)",
+              "4-GREEN|None"
+            ]
+          },
+          {
+            "name": "ARCHTYPE",
+            "title": "Which model best describes the application architecture?",
+            "tooltip": "In simple terms describe the application architecture",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Massive monolith (high memory and CPU usage), singleton deployment, vertical scale only",
+              "2-RED|Massive monolith (high memory and CPU usage), non-singleton deployment, complex to scale horizontally",
+              "3-AMBER|Complex monolith, strict runtime dependency startup order, non-resilient architecture",
+              "4-GREEN|Resilient monolith (i.e.: retries, circuit breakers)",
+              "5-GREEN|Independently deployable components"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application Dependencies",
+        "slug": "application-dependencies",
+        "questions": [
+          {
+            "name": "DEPSHW",
+            "title": "Does the application require specific hardware?",
+            "tooltip": "Specific CPU architecture or needed HW",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Requires CPU architecture other than X86_64, arm64 (aarch64)",
+              "2-RED|Requires custom or legacy hardware (example: USB device)",
+              "3-AMBER|Requires specific computer hardware (examples: GPUs, RAM, HDDs)",
+              "4-GREEN|No special hardware requirements"
+            ]
+          },
+          {
+            "name": "CONTREAD",
+            "title": "Does the application run in a container?",
+            "tooltip": "Container readiness",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Not recommended to run the application in a container",
+              "2-RED|The application runtime is not container-aware",
+              "3-AMBER|Application has been containerized with limitations (examples: functionality is restricted, component has not been tested)",
+              "5-GREEN|Application already runs on container"
+            ]
+          },
+
+          {
+            "name": "DEPSIN",
+            "title": "Incoming/Northbound dependencies",
+            "comment": "How dependent are other systems on this application and how easy are they to change?",
+            "tooltip": "Systems/Applications that calls the assessed application",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Dependencies are difficult or expensive to change because they are legacy or third-party",
+              "2-AMBER|Many dependencies exist, can be changed but the process is expensive and time-consuming",
+              "3-AMBER|Many dependencies exist, can be changed because the systems are internally managed",
+              "4-GREEN|Internal dependencies only",
+              "5-GREEN|No incoming/northbound dependencies"
+            ]
+          },
+          {
+            "name": "DEPSOUT",
+            "title": "Outgoing/southbound dependencies",
+            "comment": "How dependent is this application on other systems?",
+            "tooltip": "Systems/Applications that the assessed application calls",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Dependency availability only verified when application is processing traffic",
+              "2-RED|Dependencies require a complex and strict startup order",
+              "3-AMBER|Application not ready until dependencies are verified available",
+              "4-AMBER|Limited processing available if dependencies are unavailable",
+              "5-GREEN|No outgoing/southbound dependencies"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application Architecture",
+        "slug": "application-architecture",
+        "questions": [
+          {
+            "name": "RESILIENCY",
+            "title": "How resilient is the application? How well does it recover from outages and restarts?",
+            "tooltip": "If the assessed application or one of its dependencies fails how does the application currently recover from the failure and is manual intervention required ",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Application cannot be restarted cleanly after failure, requires manual intervention",
+              "2-RED|Application fails when a southbound dependency is unavailable and does not recover automatically",
+              "3-AMBER|Application functionality is limited when a dependency is unavailable but recovers when the dependency is available",
+              "4-GREEN|Application employs resilient architecture patterns (examples: circuit breakers, retry mechanisms)",
+              "5-GREEN|Application containers are randomly terminated to test resiliency; chaos engineering principles are followed"
+            ]
+          },
+          {
+            "name": "COMMS",
+            "title": "Who will access the application?",
+            "tooltip": "How do external clients communicate with the application",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-GREEN|External users over the Internet (Public access)",
+              "2-GREEN|Internal users over the Internet (Restricted access)",
+              "3-GREEN|Internal users over VPN (Private access)"
+            ]
+          },
+          {
+            "name": "AUTH",
+            "title": "How does the application manage user authentication?",
+            "tooltip": "Does the assessed application have users and how they login?",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-GREEN|Internal authentication (username/password managed by the application itself)",
+              "2-GREEN|Internal IDP (AD, Keycloak)",
+              "3-GREEN|External IDP (AD, Auth0, Okta)"
+            ]
+          },
+          {
+            "name": "BATCH",
+            "title": "How does the application handle batch processing?",
+            "tooltip": "Does the assessed application have batch/scheduled process?",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Crond",
+              "2-AMBER|Internally (i.e. application/framework managed timer)",
+              "3-GREEN|Cloud Provider Service (AWS Batch, GCP Cloud Scheduler)",
+              "4-GREEN|No batch processing needed"
+            ]
+          },
+          {
+            "name": "STATE",
+            "title": "How does the application manage its internal state?",
+            "tooltip": "Does the assessed application have internal state that needs to be managed/retained and if so how?",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Application components use shared memory on a VM",
+              "2-AMBER|State maintained in non-shared, non-ephemeral storage",
+              "3-GREEN|State is managed externally by another product (I.e.: Zookeeper, Memcached)",
+              "4-GREEN|Disk shared between application instances",
+              "5-GREEN|Stateless or ephemeral container storage"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application Observability",
+        "slug": "application-observability",
+        "questions": [
+          {
+            "name": "LOGS",
+            "title": "How does the application use logging and how are the logs accessed?",
+            "tooltip": "How do we get access the applications logs",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Logs are unavailable or are internal with no way to export them",
+              "2-RED|Logs are in a custom binary format, exposed with non-standard protocols",
+              "3-AMBER|Logs are exposed using syslog",
+              "4-AMBER|Logs are written to a file system, sometimes as multiple files",
+              "5-GREEN|Logs are forwarded to an external logging system (i.e.: Splunk)",
+              "6-GREEN|Logs are configurable (i.e.: can be sent to stdout)"
+            ]
+          },
+          {
+            "name": "METRICS",
+            "title": "Does the application provide metrics?",
+            "tooltip": "How do we get access the applications metrics if required, OCP defaults to CPU/Memory metrics",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|No metrics available",
+              "2-RED|Metrics collected but not exposed externally",
+              "3-GREEN|Metrics exposed using binary protocols (i.e.: SNMP, JMX)",
+              "4-GREEN|Metrics exposed using a third-party solution (i.e.: Dynatrace, AppDynamics)",
+              "5-GREEN|Metrics collected and exposed in a well-known format (Prometheus, OpenTelemetry, AWS Cloudwatch, etc)"
+            ]
+          },
+          {
+            "name": "PROFILE",
+            "title": "What best describes the application's runtime characteristics?",
+            "tooltip": "When running what does the profile of the application resemble e.g. how would it look if the cpu/memory usage was graphed, consider serverless as well",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-GREEN|Deterministic and predictable real-time execution or control requirements",
+              "2-GREEN|Sensitive to latency (examples: voice applications, high frequency trading applications)",
+              "3-GREEN|Constant traffic with a broad range of CPU and memory usage",
+              "4-GREEN|Intermittent traffic with predictable CPU and memory usage",
+              "5-GREEN|Constant traffic with predictable CPU and memory usage"
+            ]
+          },
+          {
+            "name": "STARTUPTIME",
+            "title": "How long does it take for the application to be ready to handle traffic?",
+            "tooltip": "How long does it take the application to boot",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-AMBER|5+ minutes",
+              "2-GREEN|2-5 minutes",
+              "3-GREEN|1-2 minutes",
+              "4-GREEN|10-60 second",
+              "5-GREEN|Less than 10 seconds"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application Cross-Cutting concerns",
+        "slug": "application-cross-cutting concerns",
+        "questions": [
+          {
+            "name": "TEST",
+            "title": "How is the application tested?",
+            "tooltip": "Is the application tested, is it easily tested, is it tested in production",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|No testing or minimal manual testing only",
+              "2-RED|Minimal automated testing, focused on the user interface",
+              "3-AMBER|Some automated unit and regression testing, basic CI/CD pipeline testing; modern test practices are not followed",
+              "4-GREEN|Highly repeatable automated testing (i.e.: unit, integration, smoke tests) before deploying to production; modern test practices are followed",
+              "5-GREEN|Chaos engineering approach, constant testing in production (i.e.: A/B testing + experimentation)"
+            ]
+          },
+          {
+            "name": "CONFIG",
+            "title": "How is the application configured?",
+            "tooltip": "How is the application currently configured and how might that look in a container platform, External servers are runtime dependencies hence AMBER",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Configuration files compiled during installation and configured using a user interface",
+              "2-RED|Configuration files are stored externally (e.g.: in a database) and accessed using specific environment keys (i.e.: host name, IP address)",
+              "3-RED|Multiple configuration files in multiple file system locations",
+              "4-AMBER|Configuration files built into the application and enabled using system properties at runtime",
+              "5-GREEN|Configuration retrieved from an external server (i.e: Spring Cloud Config Server, HashiCorp Consul)",
+              "6-GREEN|Configuration loaded from files in a single configurable location; environment variables used"
+            ]
+          },
+          {
+            "name": "DEPLOY",
+            "title": "How is the application deployed?",
+            "tooltip": "Understand the current deployment process and how might that look in a container platform",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-RED|Manual deployment using a user interface",
+              "2-RED|Manual deployment with some automation",
+              "3-AMBER|Simple automated deployment scripts",
+              "4-AMBER|Automated deployment with manual intervention or complex promotion through pipeline stages",
+              "5-GREEN|Automated deployment with a full CI/CD pipeline, minimal intervention for promotion through pipeline stages",
+              "6-GREEN|Fully automated (GitOps), blue-green, or canary deployment"
+            ]
+          },
+          {
+            "name": "CURRHOST",
+            "title": "Where is the application deployed?",
+            "tooltip": "where does the application run",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-AMBER|Bare metal server on prem",
+              "2-GREEN|VM on-premises (i.e., VMware, Red Hat Virtualization)",
+              "3-GREEN|Private cloud (Claranet, others)",
+              "4-GREEN|Public Cloud (Amazon Web Services, Microsoft Azure, Google Cloud Platform)",
+              "5-GREEN|Platform as a service (i.e.: Heroku, Force.com, Google App Engine)",
+              "6-GREEN|Hybrid cloud (public and private cloud providers)",
+              "7-AMBER|Other"
+            ]
+          },
+          {
+            "name": "CLOUDPROVIDER",
+            "title": "If the application is deployed on a Public Cloud Provider: which one?",
+            "tooltip": "Which CPV are you using? ",
+            "choices": [
+              "0-UNKNOWN|Unknown",
+              "1-GREEN|Amazon Web Services",
+              "2-GREEN|Microsoft Azure",
+              "3-GREEN|Google Cloud Platform",
+              "4-AMBER|Other"
+            ]
+          }
+        ]
+      }
+    ]
+  }

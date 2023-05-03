@@ -47,6 +47,9 @@ public class Questionnaire extends AbstractEntity {
     @Basic(optional = false)
     public String name;
 
+    @Basic(optional = false)
+    public String version;
+
     @OneToMany(mappedBy="questionnaire")
     public List<Category> categories;
 }
