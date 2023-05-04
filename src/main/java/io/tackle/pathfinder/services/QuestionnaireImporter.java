@@ -53,15 +53,17 @@ public class QuestionnaireImporter {
             var rootNode = objectMapper.readTree(stream);
             Assert.assertTrue(rootNode.isObject());
             var jsonVersion = Objects.requireNonNull(rootNode.get("version")).textValue();
-            var existingQuestionnaire = Questionnaire.findAll().<Questionnaire>firstResult();
+            var existingQuestionnaire = Questionnaire.<Questionnaire>findAll().firstResult();
             var categoryIdsToKeep = new ArrayList<Long>();
             if (!existingQuestionnaire.version.equals(jsonVersion)) {
                 var pages = ((ObjectNode) rootNode).withArray("pages");
                 for (int i=0; i < pages.size(); i++) {
                     categoryIdsToKeep.add(processPage((ObjectNode) pages.get(i), i+1, existingQuestionnaire));
                 }
-                long result = Category.delete("questionnaire.id = ?1 and id not in (?2)", existingQuestionnaire.id, categoryIdsToKeep);
-                Log.debugf("deleted %v categories", result);
+                long result = Category.update("set deleted = true where questionnaire.id = ?1 and id not in (?2)", existingQuestionnaire.id, categoryIdsToKeep);
+                if (result > 0) {
+                    Log.debugf("deleted %v categories", result);
+                }
                 existingQuestionnaire.version = jsonVersion;
             } else {
                 Log.info("skipping migration. Version "+ jsonVersion + " already exists.");
@@ -104,7 +106,9 @@ public class QuestionnaireImporter {
         var inactiveOptions = SingleOption.<SingleOption>list("question.category.id = ?1 and question.id not in (?2)", category.id, questionIdsToKeep);
         inactiveOptions.forEach(SingleOption::delete);
         long result = Question.update("set deleted = true where category.id = ?1 and id not in (?2)", category.id, questionIdsToKeep);
-        Log.infof("deleted %d questions and %d related options", result, inactiveOptions.size());
+        if (result > 0) {
+            Log.infof("deleted %d questions and %d related options", result, inactiveOptions.size());
+        }
         return category.id;
     }
 
@@ -130,6 +134,8 @@ public class QuestionnaireImporter {
             }
         }
         long result = SingleOption.update("set deleted = true where question.id = ?1 and id not in (?2)", entity.id, choicesToKeep);
-        Log.infof("Deleted %d single_options", result);
+        if (result > 0) {
+            Log.infof("Deleted %d single_options", result);
+        }
     }
 }
