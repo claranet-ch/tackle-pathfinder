@@ -96,6 +96,7 @@ public class QuestionnaireImporter {
             existingQuestion.questionText = jsonQuestion.get("title").asText();
             existingQuestion.description = jsonQuestion.get("tooltip").asText();
             existingQuestion.type = QuestionType.SINGLE;
+            existingQuestion.order = i+1;
             existingQuestion.persist();
             questionIdsToKeep.add(existingQuestion.id);
             updateQuestion(jsonQuestion, existingQuestion);
